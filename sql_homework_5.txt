@@ -1,0 +1,82 @@
+==========
+ON MASTER:
+==========
+CREATE TABLE IF NOT EXISTS public.posts
+(
+    id_sender bigint NOT NULL,
+    id_recever bigint NOT NULL,
+    text character varying COLLATE pg_catalog."default" NOT NULL,
+    "timestamp" time without time zone DEFAULT now()
+)
+##PARTITION BY RANGE (id_sender);
+PARTITION BY HASH (id_sender);
+ALTER TABLE IF EXISTS public.posts
+    OWNER to postgres;
+
+==========
+ON SHARD_1:
+==========
+
+CREATE TABLE IF NOT EXISTS public.posts_even
+(
+    id_sender bigint NOT NULL,
+    id_recever bigint NOT NULL,
+    text character varying COLLATE pg_catalog."default" NOT NULL,
+    "timestamp" character varying COLLATE pg_catalog."default"
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.posts_even
+    OWNER to postgres;
+
+==========
+ON SHARD_2:
+==========
+
+CREATE TABLE IF NOT EXISTS public.posts_odd
+(
+    id_sender bigint NOT NULL,
+    id_recever bigint NOT NULL,
+    text character varying COLLATE pg_catalog."default" NOT NULL,
+    "timestamp" character varying COLLATE pg_catalog."default"
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.posts_odd
+    OWNER to postgres;
+
+
+==========
+ON MASTER:
+==========
+CREATE EXTENSION postgres_fdw;
+GRANT USAGE ON FOREIGN DATA WRAPPER postgres_fdw TO myuser;
+GRANT USAGE ON FOREIGN DATA WRAPPER postgres_fdw TO postgres;
+
+CREATE SERVER shard_1 FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'localhost', dbname 'mydatabase', port '5433');
+CREATE USER MAPPING FOR myuser SERVER shard_1 OPTIONS (user 'postgres', password 'postgres');
+CREATE USER MAPPING FOR postgres SERVER shard_1 OPTIONS (user 'postgres', password 'postgres');
+CREATE FOREIGN TABLE posts_even PARTITION OF posts FOR VALUES WITH (MODULUS 2,REMAINDER 0) SERVER shard_1;
+## DROP FOREIGN TABLE posts_even;
+
+
+CREATE SERVER shard_2 FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host 'localhost', dbname 'mydatabase', port '5434');
+CREATE USER MAPPING FOR myuser SERVER shard_2 OPTIONS (user 'postgres', password 'postgres');
+CREATE USER MAPPING FOR postgres SERVER shard_2 OPTIONS (user 'postgres', password 'postgres');
+CREATE FOREIGN TABLE posts_odd PARTITION OF posts FOR VALUES WITH (MODULUS 2,REMAINDER 1) SERVER shard_2;
+
+==========
+ON MASTER:
+==========
+
+INSERT INTO public.posts(
+	id_sender, id_recever, text)
+	VALUES ('0', '1', 'test');
+
+INSERT INTO public.posts(
+	id_sender, id_recever, text)
+	VALUES ('1', '0', 'test');
+
+

@@ -1,0 +1,84 @@
+{
+	"info": {
+		"_postman_id": "5a662839-d0d2-43ea-b746-ac755068efc0",
+		"name": "homework_5",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:3000/api/dialog/list",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "jwt",
+						"value": "eyJhbGciOiJIUzI1NiJ9.NGRhZTk2NzctMjM0ZC00Yzc2LWIyMjItNDA3NjZhY2UxOTM0.YF9Dy56pIYwOocxo7EAvcdnNggfEPLoiehnmnnQP9BY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id_sender\":\"0\",\r\n    \"id_receiver\":\"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/dialog/list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"dialog",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/api/dialog/send",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "jwt",
+						"value": "eyJhbGciOiJIUzI1NiJ9.NGRhZTk2NzctMjM0ZC00Yzc2LWIyMjItNDA3NjZhY2UxOTM0.YF9Dy56pIYwOocxo7EAvcdnNggfEPLoiehnmnnQP9BY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id_sender\":\"0\",\r\n    \"id_receiver\":\"1\",\r\n    \"text\":\"test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/dialog/send",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"dialog",
+						"send"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
