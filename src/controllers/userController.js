@@ -42,18 +42,18 @@ const server = require('../server');
   };*/
   
   exports.getList = async (req, res) => {
-    const { id_sender, id_recever } = req.body;
+    const { id_sender, id_receiver } = req.body;
     try {
-      result = await pool.query('SELECT * FROM posts where (id_sender=$1) and (id_recever=$2) or (id_sender=$2) and (id_recever=$1) ORDER BY timestamp DESC', [id_sender, id_recever]);
+      result = await pool.query('SELECT * FROM posts where (id_sender=$1) and (id_receiver=$2) or (id_sender=$2) and (id_receiver=$1) ORDER BY timestamp DESC', [id_sender, id_receiver]);
       res.status(200).json(result.rows);
     } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 exports.postSend = async (req, res) => {
-  const { id_sender,id_recever, text } = req.body;
+  const { id_sender,id_receiver, text } = req.body;
   try {
-    const result = await pool.query('INSERT INTO posts(id_sender, id_recever, text)	VALUES ($1, $2, $3)', [id_sender,id_recever, text]);
+    const result = await pool.query('INSERT INTO posts(id_sender, id_receiver, text)	VALUES ($1, $2, $3)', [id_sender,id_receiver, text]);
     res.status(201).json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
