@@ -102,7 +102,10 @@ node ./src/server.js
 
 Примеры вызова методов в https://github.com/ve131061/homework_5/homework_5.postman_collection.json
 
-## Resharding without downtime procedure
+План исполнения команды SELECT в файле ./SELECT_EXPLAIN.bmp 
+
+
+## Resharding procedures without downtime
 
 1. Consistent Hashing
 
